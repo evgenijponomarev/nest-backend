@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Movie {
+  id              String   @id @default(uuid())
+
+  title           String
+  description     String?
+  releaseYear     Int @map("release_year")
+  rating          Float @default(0.0)
+  isAvailable     Boolean @map("is_available") @default(false)
+  genre           Genre @default(DRAMA)
+
+  reviews         Review[] @relation("movie_reviews")
+  actors          Actor[] @relation("movie_actors")
+  posterId        String? @unique @map("poster_id")
+  poster          MoviePoster? @relation(fields: [posterId], references: [id])
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@unique([releaseYear, title])
+  @@index([releaseYear, title])
+  @@map("movies")
+}
+
+model MoviePoster {
+  id              String   @id @default(uuid())
+
+  url             String
+  movie           Movie?    @relation
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("movie_posters")
+}
+
+model Review {
+  id              String   @id @default(uuid())
+
+  text            String
+  rating          Decimal @default(0.0)
+
+  movieId         String   @map("movie_id")
+  movie           Movie    @relation("movie_reviews", fields: [movieId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("reviews")
+}
+
+model Actor {
+  id              String   @id @default(uuid())
+
+  name            String
+
+  movies          Movie[] @relation("movie_actors")
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("actors")
+}
+
+enum Genre {
+  ACTION
+  ADVENTURE
+  COMEDY
+  DRAMA
+  FANTASY
+  HORROR
+  MYSTERY
+
+  @@map("enum_genres")
+}
