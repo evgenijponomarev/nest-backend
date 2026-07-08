@@ -5,11 +5,13 @@ import {
   Body,
   UsePipes,
   UseGuards,
+  UseFilters,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthGuard } from './common/guards/auth.guard';
 import { StringToLowercasePipe } from './common/pipes/string-to-lowercase.pipe';
 import { UserAgent } from './common/decorators/user-agent.decorator';
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 
 @Controller('app')
 export class AppController {
@@ -26,6 +28,7 @@ export class AppController {
     return { title: `Movie ${title}` };
   }
 
+  @UseFilters(AllExceptionsFilter)
   @UseGuards(AuthGuard)
   @Get('@me')
   getProfile(@UserAgent() userAgent: string) {
