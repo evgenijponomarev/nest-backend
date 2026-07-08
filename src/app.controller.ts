@@ -9,6 +9,7 @@ import {
 import { AppService } from './app.service';
 import { AuthGuard } from './common/guards/auth.guard';
 import { StringToLowercasePipe } from './common/pipes/string-to-lowercase.pipe';
+import { UserAgent } from './common/decorators/user-agent.decorator';
 
 @Controller('app')
 export class AppController {
@@ -27,11 +28,12 @@ export class AppController {
 
   @UseGuards(AuthGuard)
   @Get('@me')
-  getProfile() {
+  getProfile(@UserAgent() userAgent: string) {
     return {
       id: 1,
       name: 'John Doe',
       email: 'john.doe@example.com',
+      userAgent,
     };
   }
 }
