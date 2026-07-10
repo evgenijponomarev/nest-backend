@@ -13,6 +13,7 @@ import { getGraphQLConfig } from './config/graphql.config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ConfigService } from '@nestjs/config';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ConfigService } from '@nestjs/config';
     }),
     AuthModule,
     UserModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

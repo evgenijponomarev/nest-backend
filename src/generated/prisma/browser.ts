@@ -42,3 +42,8 @@ export type Actor = Prisma.ActorModel
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Messages
+ * 
+ */
+export type Messages = Prisma.MessagesModel
