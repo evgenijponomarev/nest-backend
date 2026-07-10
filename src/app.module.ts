@@ -14,6 +14,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ConfigService } from '@nestjs/config';
 import { ChatModule } from './chat/chat.module';
+import { ArtistModule } from './artist/artist.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ChatModule } from './chat/chat.module';
     AuthModule,
     UserModule,
     ChatModule,
+    ArtistModule,
   ],
   controllers: [AppController],
   providers: [AppService],
