@@ -6,6 +6,7 @@ import {
   UsePipes,
   UseGuards,
   UseFilters,
+  Param,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthGuard } from './common/guards/auth.guard';
@@ -16,6 +17,13 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 @Controller('app')
 export class AppController {
   constructor(private readonly appService: AppService) {}
+
+  @Get('/artists/:id')
+  async getArtist(@Param('id') id: string) {
+    const artist = await this.appService.getArtist(id);
+
+    return artist;
+  }
 
   @Get()
   getHello(): { message: string } {

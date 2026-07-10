@@ -15,6 +15,7 @@ import { UserModule } from './user/user.module';
 import { ConfigService } from '@nestjs/config';
 import { ChatModule } from './chat/chat.module';
 import { ArtistModule } from './artist/artist.module';
+import { SpotifyModule } from './spotify/spotify.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ArtistModule } from './artist/artist.module';
     UserModule,
     ChatModule,
     ArtistModule,
+    SpotifyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
