@@ -10,8 +10,8 @@ import { JwtPayload } from './interfaces/jwt.interface';
 import { JwtService } from '@nestjs/jwt';
 import argon2 from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { RegisterRequestDto } from './dto/register.dto';
-import { LoginRequestDto } from './dto/login.dto';
+import { RegisterInput } from './inputs/register.input';
+import { LoginInput } from './inputs/login.input';
 import { Request, Response } from 'express';
 import { isDev } from 'src/utils/is-dev.util';
 
@@ -35,9 +35,9 @@ export class AuthService {
     this.COOKIE_DOMAIN = this.configService.getOrThrow<string>('COOKIE_DOMAIN');
   }
 
-  async register(res: Response, dto: RegisterRequestDto) {
+  async register(res: Response, input: RegisterInput) {
     const existsUser = await this.prismaService.user.findUnique({
-      where: { email: dto.email },
+      where: { email: input.email },
     });
 
     if (existsUser) {
@@ -46,25 +46,25 @@ export class AuthService {
 
     const user = await this.prismaService.user.create({
       data: {
-        name: dto.name,
-        email: dto.email,
-        password: await argon2.hash(dto.password),
+        name: input.name,
+        email: input.email,
+        password: await argon2.hash(input.password),
       },
     });
 
     return this.auth(res, user.id);
   }
 
-  async login(res: Response, dto: LoginRequestDto) {
+  async login(res: Response, input: LoginInput) {
     const user = await this.prismaService.user.findUnique({
-      where: { email: dto.email },
+      where: { email: input.email },
     });
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    const isPasswordValid = await argon2.verify(user.password, dto.password);
+    const isPasswordValid = await argon2.verify(user.password, input.password);
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid password');
@@ -97,6 +97,8 @@ export class AuthService {
 
   logout(res: Response) {
     this.setCookie(res, 'refreshToken', new Date(0));
+
+    return true;
   }
 
   async validate(id: string) {
@@ -144,7 +146,7 @@ export class AuthService {
       expires,
       secure: !isDev(this.configService),
       maxAge: expires.getTime() - Date.now(),
-      sameSite: isDev(this.configService) ? 'none' : 'lax',
+      sameSite: isDev(this.configService) ? 'lax' : 'lax',
     });
   }
 }

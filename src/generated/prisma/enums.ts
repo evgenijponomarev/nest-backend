@@ -20,3 +20,11 @@ export const Genre = {
 } as const
 
 export type Genre = (typeof Genre)[keyof typeof Genre]
+
+
+export const UserRole = {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
+} as const
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
