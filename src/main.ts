@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { logger } from './common/middlewares/logger.middleware';
 // import { AuthGuard } from './common/guards/auth.guard';
@@ -19,6 +19,11 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // разрешенные методы
     exposedHeaders: ['Content-Range', 'X-Total-Count'], // какие заголовки будут доступны для клиента
     allowedHeaders: ['Content-Type', 'Authorization'], // какие заголовки может отправлять клиент
+  });
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
   });
 
   app.use(cookieParser());

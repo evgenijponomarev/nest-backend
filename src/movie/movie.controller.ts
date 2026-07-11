@@ -1,6 +1,6 @@
 import {
   Controller,
-  HttpStatus,
+  Version,
   Post,
   Body,
   Get,
@@ -26,6 +26,7 @@ import {
 @Controller({
   path: 'movies',
   // host: ['api.localhost', 'localhost'],
+  version: '1',
 })
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
@@ -39,6 +40,7 @@ export class MovieController {
     type: [MovieDto],
   })
   @Get()
+  @Version('2')
   findAll() {
     return this.movieService.findAll();
   }
