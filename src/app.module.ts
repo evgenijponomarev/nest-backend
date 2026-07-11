@@ -20,6 +20,7 @@ import { ArtistModule } from './artist/artist.module';
 import { SpotifyModule } from './spotify/spotify.module';
 import { getSpotifyConfig } from './config/spotify.config';
 import { FileModule } from './file/file.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { FileModule } from './file/file.module';
       rootPath: path.join(__dirname, '..', 'uploads'),
       serveRoot: '/static',
     }),
+    TaskModule,
   ],
   controllers: [AppController],
   providers: [AppService],
