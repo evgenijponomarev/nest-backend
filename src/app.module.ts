@@ -16,6 +16,7 @@ import { ConfigService } from '@nestjs/config';
 import { ChatModule } from './chat/chat.module';
 import { ArtistModule } from './artist/artist.module';
 import { SpotifyModule } from './spotify/spotify.module';
+import { getSpotifyConfig } from './config/spotify.config';
 
 @Module({
   imports: [
@@ -36,7 +37,11 @@ import { SpotifyModule } from './spotify/spotify.module';
     UserModule,
     ChatModule,
     ArtistModule,
-    SpotifyModule,
+    SpotifyModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: getSpotifyConfig,
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
