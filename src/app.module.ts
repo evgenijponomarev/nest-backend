@@ -2,6 +2,8 @@ import { ConfigModule } from '@nestjs/config';
 import { ApolloDriver } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import path from 'path';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -17,6 +19,7 @@ import { ChatModule } from './chat/chat.module';
 import { ArtistModule } from './artist/artist.module';
 import { SpotifyModule } from './spotify/spotify.module';
 import { getSpotifyConfig } from './config/spotify.config';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -41,6 +44,11 @@ import { getSpotifyConfig } from './config/spotify.config';
       imports: [ConfigModule],
       useFactory: getSpotifyConfig,
       inject: [ConfigService],
+    }),
+    FileModule,
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'uploads'),
+      serveRoot: '/static',
     }),
   ],
   controllers: [AppController],

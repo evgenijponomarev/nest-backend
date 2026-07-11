@@ -25,7 +25,7 @@ import {
 @ApiTags('Movie')
 @Controller({
   path: 'movies',
-  host: ['api.localhost', 'localhost'],
+  // host: ['api.localhost', 'localhost'],
 })
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
