@@ -7,9 +7,19 @@ import { logger } from './common/middlewares/logger.middleware';
 // import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import cookieParser from 'cookie-parser';
 import { setupSwagger } from './utils/swagger.util';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const config = app.get(ConfigService);
+
+  app.enableCors({
+    origin: config.getOrThrow<'string'>('ALLOWED_ORIGINS').split(','), // '*'
+    credentials: true, // разрешить отправку куков и заголовков аутентификации
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // разрешенные методы
+    exposedHeaders: ['Content-Range', 'X-Total-Count'], // какие заголовки будут доступны для клиента
+    allowedHeaders: ['Content-Type', 'Authorization'], // какие заголовки может отправлять клиент
+  });
 
   app.use(cookieParser());
 
