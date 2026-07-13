@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { CustomLogger } from './common/logger/logger.service';
 import { logger } from './common/middlewares/logger.middleware';
 // import { AuthGuard } from './common/guards/auth.guard';
 // import { ResponseInterceptor } from './common/interceptors/response.interceptor';
@@ -10,7 +11,10 @@ import { setupSwagger } from './utils/swagger.util';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
+  });
   const config = app.get(ConfigService);
 
   app.enableCors({
@@ -27,6 +31,8 @@ async function bootstrap() {
   });
 
   app.use(cookieParser());
+
+  app.useLogger(new CustomLogger());
 
   app.useGlobalPipes(new ValidationPipe());
   // app.useGlobalFilters(new AllExceptionsFilter());
